@@ -56,11 +56,11 @@ class RequestTest {
   /**
     * Метод проверяет, что все значения groupId равны параметру GROUP_NAME
     * @param json документ в json формате
-    * @param requestType параметр GROUP_NAME
+    * @param requestGroupName параметр GROUP_NAME
     */
-  def expectedGroupIdIsRequestType(json: JsValue, requestType: String) = {
+  def expectedGroupIdIsRequestType(json: JsValue, requestGroupName: String) = {
     Assert.assertTrue((json \\ "groupId").forall(x => {
-      x.as[String] == requestType
+      x.as[String] == requestGroupName
     }))
   }
 
