@@ -1,4 +1,4 @@
-name := "Test"
+name := "ProvidersTest"
 
 scalaVersion := "2.11.7"
 

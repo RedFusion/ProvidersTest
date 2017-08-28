@@ -88,13 +88,13 @@ class RequestTest {
     * 5)	Все значения groupId равны параметру GROUP_NAME
     * 4)	Для каждого id равного lastName, параметр name содержит подстроку Фамилия
     * @param response - ответ за запрос, содержащий код ответа сервера и документ в json формате
-    * @param requestType - параметр GROUP_NAME
+    * @param requestGroupName - параметр GROUP_NAME
     */
-  def testProvider(response: (Int, JsValue), requestType: String) = {
+  def testProvider(response: (Int, JsValue), requestGroupName: String) = {
     expectStatusCodeIn2xx(response._1)
     expectedDocumentInJSON(response._2)
     expectedResultCodeIsOK(response._2)
-    expectedGroupIdIsRequestType(response._2, requestType)
+    expectedGroupIdIsRequestType(response._2, requestGroupName)
     expectedForIdLastNameContainsFamily(response._2)
   }
 
