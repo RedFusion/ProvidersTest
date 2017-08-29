@@ -64,18 +64,16 @@ class RequestTest {
     }))
   }
 
-
   /**
-    * Метод проверяет, что для каждого id равного lastName,
-    * параметр name содержит подстроку Фамилия
+    * Метод проверяет, что для каждого id равного phone,
+    * параметр name содержит подстроку [Н|номер телефона]
     * @param json документ в json формате
     */
-  def expectedForIdLastNameContainsFamily(json: JsValue) = {
-    // -> assertTrue
-    Assert.assertFalse((json \\ "providerFields").forall(x => {
+  def expectedForIdPhoneNameContainsPhoneNumber(json: JsValue) = {
+    Assert.assertTrue((json \\ "providerFields").forall(x => {
       x.as[JsArray].value.forall(y => {
-        (y \ "id").asOpt[String].contains("lastName") &&
-          (y \ "name").asOpt[String].getOrElse("None").contains("Фамилия")
+        (y \ "id").asOpt[String].contains("phone") &&
+        (y \ "name").asOpt[String].getOrElse("None").matches(".*(Н|н)омер телефона.*")
       })
     }))
   }
@@ -95,14 +93,30 @@ class RequestTest {
     expectedDocumentInJSON(response._2)
     expectedResultCodeIsOK(response._2)
     expectedGroupIdIsRequestType(response._2, requestGroupName)
-    expectedForIdLastNameContainsFamily(response._2)
+    expectedForIdPhoneNameContainsPhoneNumber(response._2)
   }
 
   @Test
-  def testProvidersGroups() = {
+  def testProvidersGroupsTransfer() = {
     testProvider(requestTransfer, "Переводы")
+  }
+
+  @Test
+  def testProvidersGroupsInternet() = {
     testProvider(requestInternet, "Интернет")
+  }
+
+  @Test
+  def testProvidersGroupsCharity() = {
     testProvider(requestCharity, "Благотворительность")
+  }
+
+  @Test
+  def testJsonString() = {
+    val test: JsValue = Json.parse("[{\"saveable\":true,\"keyboard\":\"phone\",\"name\":\"Номер телефона/Номер выделенной линии\",\"regexp\":\"^\\\\d{10}$\",\"usedInCheck\":false,\"id\":\"phone\",\"editableInTemplate\":true,\"order\":1,\"hint\":\"10 цифр\",\"required\":true,\"type\":\"Text\"}]")
+    Assert.assertTrue((test \\ "name").forall(x => {
+      x.as[String].matches(".*(Н|н)омер телефона.*")
+    }))
   }
 
   /**
