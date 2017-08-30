@@ -65,16 +65,15 @@ class RequestTest {
   }
 
   /**
-    * Метод проверяет, что для каждого id равного phone,
-    * параметр name содержит подстроку [Н|номер телефона]
+    * Метод выбирает все блоки providerFields, в которых id равен phone
+    * и параметр name содержит подстроку [Н|номер телефона]
     * @param json документ в json формате
     */
   def expectedForIdPhoneNameContainsPhoneNumber(json: JsValue) = {
-    Assert.assertTrue((json \\ "providerFields").forall(x => {
-      x.as[JsArray].value.forall(y => {
-        (y \ "id").asOpt[String].contains("phone") &&
-        (y \ "name").asOpt[String].getOrElse("None").matches(".*(Н|н)омер телефона.*")
-      })
+    Assert.assertTrue((json \\ "providerFields").filter {
+      x => x.as[JsArray].value.exists(p => (p \ "id").as[String] == "phone")
+    }.forall(y => {
+      y.toString().matches(".*(Н|н)омер телефона.*")
     }))
   }
 
