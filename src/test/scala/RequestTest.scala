@@ -73,9 +73,9 @@ class RequestTest {
     Assert.assertTrue((json \\ "providerFields").filter {
       x => x.as[JsArray].value.exists(p => (p \ "id").as[String] == "phone")
     }.forall(y => {
-      y.toString().matches(".*(Н|н)омер телефона.*")
+      (y \\ "name").mkString.matches(".*(Н|н)омер телефона.*")
     }))
-  }
+}
 
   /**
     * Метод запускает последовательно проверки в следующем порядке:
